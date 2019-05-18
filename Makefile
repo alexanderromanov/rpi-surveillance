@@ -7,5 +7,5 @@ deploy:
         && scp rpi-surveillance $(PI_USER)@$(PI_HOST):/home/$(PI_USER)/surveillance
 
 .PHONY: run
-run: deploy
-	ssh $(PI_USER)@$(PI_HOST) "/home/$(PI_USER)/surveillance/rpi-surveillance"
+run:
+	ssh -t $(PI_USER)@$(PI_HOST) "/home/$(PI_USER)/surveillance/rpi-surveillance"
