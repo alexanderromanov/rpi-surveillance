@@ -16,6 +16,7 @@ func init() {
 var port = flag.String("port", "8080", "HTTP listen port")
 var pictureWidth = flag.Int("width", 1024, "picture width")
 var pictureHeight = flag.Int("height", 800, "picture height")
+var interval = flag.Int("interval", 5000, "interval between pictures")
 
 var photoUrl = "/photo"
 
@@ -49,6 +50,8 @@ func main() {
 	homepage, err := template.New("homepage").Parse(homePageTemplate)
 	check("parse homepage template", err)
 
+	go camera.StartTakingPictures(*pictureWidth, *pictureHeight, *interval)
+
 	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path != "/" {
 			writer.WriteHeader(404)
@@ -73,9 +76,8 @@ func writeStreamOutput(w http.ResponseWriter) {
 	headers.Set("Content-Type", "image/jpg")
 	headers.Set("Cache-Control", "no-cache")
 
-	bytes, err := camera.TakePicture(*pictureWidth, *pictureHeight)
-	check("take a picture", err)
+	picture := camera.LatestPicture()
 
-	_, err = w.Write(bytes)
+	_, err := w.Write(picture)
 	check("write response", err)
 }
