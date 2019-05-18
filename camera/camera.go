@@ -12,9 +12,10 @@ const (
 
 func TakePicture(width, height int) (bytes []byte, err error) {
 	args := []string{
-		"-w", strconv.Itoa(width),
-		"-h", strconv.Itoa(height),
-		"-o", "-",
+		"--width", strconv.Itoa(width),
+		"--height", strconv.Itoa(height),
+		"--output", "-",
+		"--timeout", "1000",
 	}
 
 	log.Println("taking picture")
